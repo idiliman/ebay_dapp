@@ -9,6 +9,9 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 
+// https://thirdweb.com/goerli/0x8F15f5d29671C9373CC8FC07bF0eA8E867c13650/listings
+// https://thirdweb.com/goerli/0xF15Ba48b5aC591Ad6d6929Db28c6Ba2589d12eb3/nfts
+
 export default function Header() {
   const connectWithMetamask = useMetamask();
   const disconnect = useDisconnect();
