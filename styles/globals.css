@@ -16,7 +16,7 @@
   }
 
   .card {
-    @apply border-gray-200 rounded-md p-5 bg-gray-50 hover:bg-gray-100;
+    @apply border-gray-200 rounded-md p-5 bg-gray-50 hover:bg-gray-100 cursor-pointer;
   }
 
   .formField {
