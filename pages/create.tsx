@@ -103,7 +103,7 @@ export default function Create({}: Props) {
         },
         {
           onSuccess(data, variables, context) {
-            console.log(data.status, variables, context);
+            console.log(data, variables, context);
             router.push("/");
           },
           onError(error, variables, context) {
