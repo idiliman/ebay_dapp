@@ -6,6 +6,7 @@ import { listeners } from "process";
 import { stringify } from "querystring";
 import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
+import Countdown from "react-countdown";
 
 function ListingPage() {
   const router = useRouter();
@@ -123,10 +124,14 @@ function ListingPage() {
             {listing.type === 1 && (
               <>
                 <p>Current Minimum Bid:</p>
-                <p>...</p>
+                <p>
+                  {minimumNextBid?.displayValue} {minimumNextBid?.symbol}
+                </p>
 
                 <p>Time Remaining:</p>
-                <p>...</p>
+                <Countdown
+                  date={Number(listing.endTimeInEpochSeconds.toString()) * 1000}
+                />
               </>
             )}
             <input
