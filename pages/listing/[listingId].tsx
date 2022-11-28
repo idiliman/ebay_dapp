@@ -22,6 +22,9 @@ import Header from "../../components/Header";
 import Countdown from "react-countdown";
 import network from "../../utils/network";
 import { ethers } from "ethers";
+import toast, { Toaster } from "react-hot-toast";
+import { promises } from "stream";
+import { resolve } from "path";
 
 function ListingPage() {
   const router = useRouter();
@@ -89,17 +92,44 @@ function ListingPage() {
     }
   };
 
-  const buyNft = async () => {
-    address === undefined && alert("Please connect your wallet first");
+  // const successNotif = (message: string) => {
+  //   return toast.success(message, {
+  //     className: "border border-solid border-green-600",
+  //   });
+  // };
 
+  // const errorNotif = (message: string) => {
+  //   return toast.error(message, {
+  //     className: "border border-solid border-red-600",
+  //   });
+  // };
+
+  // const buyingNftToast = (message: string) => {
+  //   return toast.loading(() => (
+  //     <div className="flex items-center">
+  //       <div>{message}</div>
+  //     </div>
+  //   ));
+  // };
+
+  
+
+  const buyNft = async () => {
+    if (!listingId || !contract || !listing) return;
+
+    if (!address) {
+      return toast.error("Please connect your wallet first");
+    }
+
+    // address === undefined && toast.error("Please connect your wallet first");
+    
     if (networkMismatch) {
       switchNetwork && switchNetwork(network);
       return;
     }
 
-    if (!listingId || !contract || !listing) return;
+    const buyingNftToast = toast.loading("Buying NFT...");
 
-    // Can try useQuery instead
     await buyNow(
       {
         id: listingId,
@@ -108,22 +138,35 @@ function ListingPage() {
       },
       {
         onSuccess(data, variables, context) {
-          alert("NFT bought successfully");
+          toast.success("NFT bought successfully");
           console.log("SUCCESS", data);
           router.replace("/");
         },
         onError(error, variables, context) {
-          alert("ERROR: NFT could not be bought");
+          toast.remove(buyingNftToast);
+          toast.error("ERROR: NFT could not be bought");
           console.log("ERROR", error);
         },
       }
     );
   };
 
+  // {
+  //     onSuccess(data, variables, context) {
+  //       toast.success("NFT bought successfully");
+  //       console.log("SUCCESS", data);
+  //       router.replace("/");
+  //     },
+  //     onError(error, variables, context) {
+  //       toast.error("ERROR: NFT could not be bought");
+  //       console.log("ERROR", error);
+  //     },
+  //   }
+
   const createBidOrOffer = async () => {
     try {
       if (!address) {
-        alert("Please connect wallet first");
+        toast.error("Please connect your wallet first");
         return;
       }
 
@@ -152,12 +195,12 @@ function ListingPage() {
           },
           {
             onSuccess(data, variables, context) {
-              alert("Offer made successfully");
+              toast.success("Offer made successfully");
               console.log("SUCCESS", data);
               setBidAmount("");
             },
             onError(error, variables, context) {
-              alert("ERROR: Offer could not be made");
+              toast.error("ERROR: Offer could not be made");
               console.log("ERROR", error);
             },
           }
@@ -175,11 +218,11 @@ function ListingPage() {
           },
           {
             onSuccess(data, variables, context) {
-              alert("Bid made successfully");
+              toast.success("Bid made successfully");
               console.log("SUCCESS", data, variables, context);
             },
             onError(error, variables, context) {
-              alert("Bid could not be made");
+              toast.error("Bid could not be made");
               console.log("SUCCESS", error, variables, context);
             },
           }
@@ -210,6 +253,7 @@ function ListingPage() {
       <Header />
 
       <main className="max-w-6xl mx-auto p-10 flex flex-col lg:flex-row space-y-10 space-x-5 items-center">
+        <Toaster />
         <div className="p-10 border mx-auto lg:mx-0 max-w-md lg:max-w-xl">
           <MediaRenderer src={listing?.asset.image} />
         </div>
@@ -276,10 +320,10 @@ function ListingPage() {
                                 alert("Offer accepted successfully!");
                                 console.log(data, variables, context);
                                 router.replace("/");
-                              },onSettled(data, error, variables, context) {
-                                  alert("ERROR: Offer could not be accepted")
-                                  console.log(error, variables, context)
-                    
+                              },
+                              onSettled(data, error, variables, context) {
+                                alert("ERROR: Offer could not be accepted");
+                                console.log(error, variables, context);
                               },
                             }
                           )
