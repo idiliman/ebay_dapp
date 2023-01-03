@@ -56,7 +56,7 @@ export default function Header() {
             <Image
               className="h-full w-full object-contain"
               alt="Logo"
-              src="https://links.papareact.com/bdb"
+              src="https://1.img-dpreview.com/files/p/E~C0x275S1677x943T1200x675~articles/5284763122/03FC3EFD-C943-44A1-BC1F-9B70258C1A0A.jpeg"
               width={100}
               height={100}
             />
